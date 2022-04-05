@@ -32,7 +32,7 @@ parser.add_argument('-a', '--arch', metavar='ARCH', default='resnet18',
                     help='model architecture: ' +
                         ' | '.join(model_names) +
                         ' (default: resnet18)')
-parser.add_argument('-j', '--workers', default=4, type=int, metavar='N',
+parser.add_argument('-j', '--workers', default=2, type=int, metavar='N',
                     help='number of data loading workers (default: 4)')
 parser.add_argument('--epochs', default=90, type=int, metavar='N',
                     help='number of total epochs to run')
@@ -225,7 +225,7 @@ def main_worker(gpu, ngpus_per_node, args):
         train_sampler = None
     
     # Take 21 examples
-    subset = list(range(0, 100, 5))
+    subset = list(range(0, 100, 10))
     train_data_subset = torch.utils.data.Subset(train_dataset, subset)
 
     train_loader = torch.utils.data.DataLoader(
