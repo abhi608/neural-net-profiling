@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=av2783-imagenet_profiling
-#SBATCH --mail-type=END
+#SBATCH --mail-type=ALL
 #SBATCH --mail-user=av2783@nyu.edu
 #SBATCH --output=slurm_%j.out
 #SBATCH --account=csci_ga_3033_085_2022sp
