@@ -10,6 +10,7 @@ COMMAND="python3 imagenet/main.py /imagenet --arch $MODEL --epochs 1 --batch-siz
 METRICS="dram__bytes_write.sum,dram__bytes_read.sum,smsp__sass_thread_inst_executed_op_fadd_pred_on.sum,smsp__sass_thread_inst_executed_op_fmul_pred_on.sum,smsp__sass_thread_inst_executed_op_ffma_pred_on.sum"
 
 # ncu files
+rm -rf $MODEL
 mkdir $MODEL
 NCU_RUNTIME_LOG="$MODEL/$MODEL-ncu-runtime.log"
 NCU_METRIC_LOG="$MODEL/$MODEL-ncu-metric.log"
