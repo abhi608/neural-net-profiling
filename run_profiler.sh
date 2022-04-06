@@ -26,8 +26,13 @@ echo "Starting ncu profiling"
 # run ncu
 ncu -f --log-file $NCU_RUNTIME_LOG --metrics $METRICS --target-processes all $COMMAND
 # compute bytes 
+BYTE=`cat $NCU_RUNTIME_LOG | grep -e "dram__bytes_write.sum" -e "dram__bytes_read.sum" | grep -e " byte" | awk '{print($3)}' | paste -sd+ | bc`
+KBYTE=`cat $NCU_RUNTIME_LOG | grep -e "dram__bytes_write.sum" -e "dram__bytes_read.sum" | grep -e "Kbyte" | awk '{print($3)}' | paste -sd+ | b`
+MBYTE=`cat $NCU_RUNTIME_LOG | grep -e "dram__bytes_write.sum" -e "dram__bytes_read.sum" | grep -e "Mbyte" | awk '{print($3)}' | paste -sd+ | bc`
+GBYTE=`cat $NCU_RUNTIME_LOG | grep -e "dram__bytes_write.sum" -e "dram__bytes_read.sum" | grep -e "Gbyte" | awk '{print($3)}' | paste -sd+ | bc`
+TOTAL_BYTES=$((BYTE + 1000*KBYTE + 1000000*MBYTE + 1000000000*GBYTE))
 echo "BYTES" >> $NCU_METRIC_LOG
-cat $NCU_RUNTIME_LOG | grep -e "dram__bytes_write.sum" -e "dram__bytes_read.sum" | awk '{print($3)}' | paste -sd+ | bc >> $NCU_METRIC_LOG
+echo $TOTAL_BYTES >> $NCU_METRIC_LOG
 #compute FLOPS
 TMP1=`cat $NCU_RUNTIME_LOG | grep -e "smsp__sass_thread_inst_executed_op_fadd_pred_on.sum" -e  "smsp__sass_thread_inst_executed_op_fmul_pred_on.sum" | awk '{print $3}' | paste -sd+ | bc`
 TMP2=`cat $NCU_RUNTIME_LOG | grep -e "smsp__sass_thread_inst_executed_op_ffma_pred_on.sum" | awk '{print $3}' | paste -sd+ | bc`
