@@ -7,7 +7,11 @@ fi
 MODEL=$1
 
 COMMAND="python3 imagenet/main.py /imagenet --arch $MODEL --epochs 1 --batch-size 10 --print-freq 10"
-METRICS="dram__bytes_write.sum,dram__bytes_read.sum,smsp__sass_thread_inst_executed_op_fadd_pred_on.sum,smsp__sass_thread_inst_executed_op_fmul_pred_on.sum,smsp__sass_thread_inst_executed_op_ffma_pred_on.sum"
+METRICS="dram__bytes_write.sum,dram__bytes_read.sum,\
+dram__sectors_read.sum,dram__sectors_write.sum,\
+smsp__sass_thread_inst_executed_op_fadd_pred_on.sum,smsp__sass_thread_inst_executed_op_fmul_pred_on.sum,smsp__sass_thread_inst_executed_op_ffma_pred_on.sum,\
+smsp__sass_thread_inst_executed_op_dadd_pred_on.sum,smsp__sass_thread_inst_executed_op_dmul_pred_on.sum,smsp__sass_thread_inst_executed_op_dfma_pred_on.sum,\
+smsp__sass_thread_inst_executed_op_hadd_pred_on.sum,smsp__sass_thread_inst_executed_op_hmul_pred_on.sum,smsp__sass_thread_inst_executed_op_hfma_pred_on.sum"
 
 # ncu files
 rm -rf $MODEL
@@ -26,16 +30,29 @@ echo "Starting ncu profiling"
 # run ncu
 ncu -f --log-file $NCU_RUNTIME_LOG --metrics $METRICS --target-processes all $COMMAND
 # compute bytes 
-BYTE=`cat $NCU_RUNTIME_LOG | grep -e "dram__bytes_write.sum" -e "dram__bytes_read.sum" | sed -e "s/,/ /g" | grep -e " byte" | awk '{print($3)}' | paste -sd+ | bc`
-KBYTE=`cat $NCU_RUNTIME_LOG | grep -e "dram__bytes_write.sum" -e "dram__bytes_read.sum" | sed -e "s/,/ /g" | grep -e "Kbyte" | awk '{print($3)}' | paste -sd+ | bc`
-MBYTE=`cat $NCU_RUNTIME_LOG | grep -e "dram__bytes_write.sum" -e "dram__bytes_read.sum" | sed -e "s/,/ /g" | grep -e "Mbyte" | awk '{print($3)}' | paste -sd+ | bc`
-GBYTE=`cat $NCU_RUNTIME_LOG | grep -e "dram__bytes_write.sum" -e "dram__bytes_read.sum" | sed -e "s/,/ /g" | grep -e "Gbyte" | awk '{print($3)}' | paste -sd+ | bc`
+BYTE=`cat $NCU_RUNTIME_LOG | grep -e "dram__bytes_write.sum" -e "dram__bytes_read.sum" | grep -e " byte" | sed -e "s/,/ /g" |  awk '{print($3)}' | paste -sd+ | bc`
+KBYTE=`cat $NCU_RUNTIME_LOG | grep -e "dram__bytes_write.sum" -e "dram__bytes_read.sum" | grep -e "Kbyte" | sed -e "s/,/ /g" | awk '{print($3)}' | paste -sd+ | bc`
+MBYTE=`cat $NCU_RUNTIME_LOG | grep -e "dram__bytes_write.sum" -e "dram__bytes_read.sum" | grep -e "Mbyte" | sed -e "s/,/ /g" | awk '{print($3)}' | paste -sd+ | bc`
+GBYTE=`cat $NCU_RUNTIME_LOG | grep -e "dram__bytes_write.sum" -e "dram__bytes_read.sum" | grep -e "Gbyte" | sed -e "s/,/ /g" | awk '{print($3)}' | paste -sd+ | bc`
 TOTAL_BYTES=`awk "BEGIN{ print $BYTE + 1000*$KBYTE + 1000000*$MBYTE + 1000000000*$GBYTE }"`
 echo "BYTES" >> $NCU_METRIC_LOG
 echo $TOTAL_BYTES >> $NCU_METRIC_LOG
-#compute FLOPS
-TMP1=`cat $NCU_RUNTIME_LOG | grep -e "smsp__sass_thread_inst_executed_op_fadd_pred_on.sum" -e  "smsp__sass_thread_inst_executed_op_fmul_pred_on.sum" | sed -e "s/,/ /g" | awk '{print $3}' | paste -sd+ | bc`
-TMP2=`cat $NCU_RUNTIME_LOG | grep -e "smsp__sass_thread_inst_executed_op_ffma_pred_on.sum" | sed -e "s/,/ /g" | awk '{print $3}' | paste -sd+ | bc`
+
+# compute transactions
+echo "TRANSACTIONS" >> $NCU_METRIC_LOG
+cat $NCU_RUNTIME_LOG | grep -e "dram__sectors_read.sum" -e "dram__sectors_write.sum" | sed -e "s/,/ /g" | awk '{print($3)}' | paste -sd+ | bc >> $NCU_METRIC_LOG
+
+# compute FLOPS
+TMP1=`cat $NCU_RUNTIME_LOG | \
+grep -e "smsp__sass_thread_inst_executed_op_fadd_pred_on.sum" -e  "smsp__sass_thread_inst_executed_op_fmul_pred_on.sum" \
+grep -e "smsp__sass_thread_inst_executed_op_dadd_pred_on.sum" -e  "smsp__sass_thread_inst_executed_op_dmul_pred_on.sum" \
+grep -e "smsp__sass_thread_inst_executed_op_hadd_pred_on.sum" -e  "smsp__sass_thread_inst_executed_op_hmul_pred_on.sum" \
+| sed -e "s/,/ /g" | awk '{print $3}' | paste -sd+ | bc`
+TMP2=`cat $NCU_RUNTIME_LOG | \
+grep -e "smsp__sass_thread_inst_executed_op_ffma_pred_on.sum" \
+grep -e "smsp__sass_thread_inst_executed_op_dfma_pred_on.sum" \
+grep -e "smsp__sass_thread_inst_executed_op_hfma_pred_on.sum" \
+| sed -e "s/,/ /g" | awk '{print $3}' | paste -sd+ | bc`
 FLOPS=$((TMP1 + 2*TMP2))
 echo "FLOPS" >> $NCU_METRIC_LOG
 echo $FLOPS >> $NCU_METRIC_LOG
