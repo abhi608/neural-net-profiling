@@ -1,17 +1,23 @@
 #!/bin/bash
-
-COMMAND="python3 imagenet/main.py /imagenet --arch resnet18 --epochs 1 --batch-size 10 --print-freq 10 --seed 42"
+if [ -z $1 ]
+then
+	echo "Must input model arch"
+	exit 1
+fi
 MODEL=$1
+
+COMMAND="python3 imagenet/main.py /imagenet --arch $MODEL --epochs 1 --batch-size 10 --print-freq 10 --seed 42"
 METRICS="dram__bytes_write.sum,dram__bytes_read.sum,smsp__sass_thread_inst_executed_op_fadd_pred_on.sum,smsp__sass_thread_inst_executed_op_fmul_pred_on.sum,smsp__sass_thread_inst_executed_op_ffma_pred_on.sum"
 
 # ncu files
-NCU_RUNTIME_LOG="$MODEL-ncu-runtime.log"
-NCU_METRIC_LOG="$MODEL-ncu-metric.log"
+mkdir $MODEL
+NCU_RUNTIME_LOG="$MODEL/$MODEL-ncu-runtime.log"
+NCU_METRIC_LOG="$MODEL/$MODEL-ncu-metric.log"
 rm -rf NCU_TMP_LOG NCU_METRIC_LOG
 
 # nsys file
-NSYS_RUNTIME_LOG="$MODEL-nsys-runtime.qdrep"
-NSYS_METRIC_LOG="$MODEL-nsys-metric.log"
+NSYS_RUNTIME_LOG="$MODEL/$MODEL-nsys-runtime.qdrep"
+NSYS_METRIC_LOG="$MODEL/$MODEL-nsys-metric.log"
 rm -rf NSYS_RUNTIME_LOG NSYS_METRIC_LOG
 
 ehco "*******************************************************"
