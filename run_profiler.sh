@@ -1,6 +1,6 @@
 #!/bin/bash
 
-COMMAND="python3 main.py /imagenet --arch resnet18 --epochs 1 --batch-size 10 --print-freq 10 --seed 42"
+COMMAND="python3 imagenet/main.py /imagenet --arch resnet18 --epochs 1 --batch-size 10 --print-freq 10 --seed 42"
 MODEL=$1
 METRICS="dram__bytes_write.sum,dram__bytes_read.sum,smsp__sass_thread_inst_executed_op_fadd_pred_on.sum,smsp__sass_thread_inst_executed_op_fmul_pred_on.sum,smsp__sass_thread_inst_executed_op_ffma_pred_on.sum"
 
