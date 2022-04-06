@@ -128,5 +128,5 @@ dmypy.json
 .pyre/
 
 # nsys
-.qdrep
-.sqlite
+*.qdrep
+*.sqlite
