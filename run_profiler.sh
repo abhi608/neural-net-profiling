@@ -20,7 +20,7 @@ NSYS_RUNTIME_LOG="$MODEL/$MODEL-nsys-runtime.qdrep"
 NSYS_METRIC_LOG="$MODEL/$MODEL-nsys-metric.log"
 rm -rf NSYS_RUNTIME_LOG NSYS_METRIC_LOG
 
-ehco "*******************************************************"
+echo "*******************************************************"
 echo "Starting ncu profiling"
 # run ncu
 ncu -f --log-file $NCU_RUNTIME_LOG --metrics $METRICS --target-processes all $COMMAND
@@ -34,4 +34,4 @@ FLOPS=$((TMP1 + 2*TMP2))
 echo "FLOPS" >> $NCU_METRIC_LOG
 echo $FLOPS >> $NCU_METRIC_LOG
 echo "Completed ncu profiling"
-ehco "*******************************************************"
+echo "*******************************************************"
