@@ -224,8 +224,8 @@ def main_worker(gpu, ngpus_per_node, args):
     else:
         train_sampler = None
     
-    # Take 21 examples
-    subset = list(range(0, 100, 10))
+    # Take 2 examples
+    subset = list(range(0, 99, 50))
     train_data_subset = torch.utils.data.Subset(train_dataset, subset)
 
     train_loader = torch.utils.data.DataLoader(
