@@ -50,7 +50,7 @@ nsys profile -f true -o $NSYS_RUNTIME_LOG $COMMAND
 rm -rf $MODEL/tmp_nsys_gputrace.csv
 nsys stats --report gputrace $NSYS_RUNTIME_LOG -o $MODEL/tmp_nsys
 # compute runtime
-echo "Runtime(nsec)"
+echo "Runtime(nsec)" >> $NSYS_METRIC_LOG
 tail -n +2 $MODEL/tmp_nsys_gputrace.csv | sed -e "s/,/ /g" | awk '{print $2}' | paste -sd+ | bc >> $NSYS_METRIC_LOG
 echo "Completed nsys profiling"
 echo "*******************************************************"
