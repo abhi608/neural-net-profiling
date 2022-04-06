@@ -44,14 +44,14 @@ cat $NCU_RUNTIME_LOG | grep -e "dram__sectors_read.sum" -e "dram__sectors_write.
 
 # compute FLOPS
 TMP1=`cat $NCU_RUNTIME_LOG | \
-grep -e "smsp__sass_thread_inst_executed_op_fadd_pred_on.sum" -e  "smsp__sass_thread_inst_executed_op_fmul_pred_on.sum" \
-grep -e "smsp__sass_thread_inst_executed_op_dadd_pred_on.sum" -e  "smsp__sass_thread_inst_executed_op_dmul_pred_on.sum" \
-grep -e "smsp__sass_thread_inst_executed_op_hadd_pred_on.sum" -e  "smsp__sass_thread_inst_executed_op_hmul_pred_on.sum" \
+grep -e "smsp__sass_thread_inst_executed_op_fadd_pred_on.sum" -e "smsp__sass_thread_inst_executed_op_fmul_pred_on.sum" \
+-e "smsp__sass_thread_inst_executed_op_dadd_pred_on.sum" -e "smsp__sass_thread_inst_executed_op_dmul_pred_on.sum" \
+-e "smsp__sass_thread_inst_executed_op_hadd_pred_on.sum" -e "smsp__sass_thread_inst_executed_op_hmul_pred_on.sum" \
 | sed -e "s/,/ /g" | awk '{print $3}' | paste -sd+ | bc`
 TMP2=`cat $NCU_RUNTIME_LOG | \
 grep -e "smsp__sass_thread_inst_executed_op_ffma_pred_on.sum" \
-grep -e "smsp__sass_thread_inst_executed_op_dfma_pred_on.sum" \
-grep -e "smsp__sass_thread_inst_executed_op_hfma_pred_on.sum" \
+-e "smsp__sass_thread_inst_executed_op_dfma_pred_on.sum" \
+-e "smsp__sass_thread_inst_executed_op_hfma_pred_on.sum" \
 | sed -e "s/,/ /g" | awk '{print $3}' | paste -sd+ | bc`
 FLOPS=$((TMP1 + 2*TMP2))
 echo "FLOPS" >> $NCU_METRIC_LOG
