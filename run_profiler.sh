@@ -27,7 +27,7 @@ echo "Starting ncu profiling"
 ncu -f --log-file $NCU_RUNTIME_LOG --metrics $METRICS --target-processes all $COMMAND
 # compute bytes 
 BYTE=`cat $NCU_RUNTIME_LOG | grep -e "dram__bytes_write.sum" -e "dram__bytes_read.sum" | grep -e " byte" | awk '{print($3)}' | paste -sd+ | bc`
-KBYTE=`cat $NCU_RUNTIME_LOG | grep -e "dram__bytes_write.sum" -e "dram__bytes_read.sum" | grep -e "Kbyte" | awk '{print($3)}' | paste -sd+ | b`
+KBYTE=`cat $NCU_RUNTIME_LOG | grep -e "dram__bytes_write.sum" -e "dram__bytes_read.sum" | grep -e "Kbyte" | awk '{print($3)}' | paste -sd+ | bc`
 MBYTE=`cat $NCU_RUNTIME_LOG | grep -e "dram__bytes_write.sum" -e "dram__bytes_read.sum" | grep -e "Mbyte" | awk '{print($3)}' | paste -sd+ | bc`
 GBYTE=`cat $NCU_RUNTIME_LOG | grep -e "dram__bytes_write.sum" -e "dram__bytes_read.sum" | grep -e "Gbyte" | awk '{print($3)}' | paste -sd+ | bc`
 TOTAL_BYTES=$((BYTE + 1000*KBYTE + 1000000*MBYTE + 1000000000*GBYTE))
