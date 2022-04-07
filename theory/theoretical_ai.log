@@ -1,0 +1,3 @@
+<function resnet18 at 0x14f690497550> tensor([67.3463])
+<function resnet34 at 0x14f6904975e0> tensor([73.9525])
+<function resnet50 at 0x14f690497670> tensor([50.9970])
