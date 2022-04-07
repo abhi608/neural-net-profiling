@@ -17,7 +17,7 @@ def add_hook(layer):
     handler_collection.append(handler)
     # print("Registered %s" % str(layer))
 
-models = [resnet18, resnet34, resnet50]
+models = [resnet18(), resnet34(), resnet50()]
 for model in models:
     model.apply(add_hook)
     with torch.no_grad():
