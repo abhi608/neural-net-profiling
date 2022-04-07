@@ -41,6 +41,7 @@ def add_hook(layer):
     # print("Registered %s" % str(layer))
 
 models = [resnet18(), resnet34(), resnet50()]
+i = 0
 for model in models:
     model.apply(add_hook)
     with torch.no_grad():
@@ -57,6 +58,7 @@ for model in models:
             total_ai += cur.ai
             n += 1
     avg_ai = total_ai/n
-    print(model.__name__, avg_ai)
+    print(models[i], avg_ai)
+    i += 1
 
 
