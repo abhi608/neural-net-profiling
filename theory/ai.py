@@ -57,6 +57,6 @@ for model in models:
             total_ai += cur.ai
             n += 1
     avg_ai = total_ai/n
-    print(model(), avg_ai)
+    print(model.__name__, avg_ai)
 
 
