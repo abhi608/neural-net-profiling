@@ -50,6 +50,7 @@ for model in models:
     total_ai = 0
     queue = [m for m in model.modules()]
     n = 0
+    memory = 0.0
     while queue:
         cur = queue.pop(0)
         if len(list(cur.children())) > 0:
@@ -57,9 +58,10 @@ for model in models:
                 queue.append(k)
         else:
             total_ai += cur.ai
+            memory += (cur.weights + cur.memory_access)
             n += 1
     avg_ai = total_ai/n
-    print(models[i], avg_ai)
+    print(models[i], avg_ai, memory)
     i += 1
 
 
