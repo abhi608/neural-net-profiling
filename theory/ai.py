@@ -19,6 +19,7 @@ def add_hook(layer):
 
 models = [resnet18, resnet34, resnet50]
 for model in models:
+    model.apply(add_hook)
     with torch.no_grad():
         model(torch.ones(1,3,224,224))
     total_ai = 0
