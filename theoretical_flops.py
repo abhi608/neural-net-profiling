@@ -12,9 +12,4 @@ for model in models:
     print("****************")
     model = model().to(device)
     count_ops(model, inp)
-    print("\n\n\n\n")
-
-
-
-# Count the number of FLOPs
-count_ops(model, inp)
+    print("\nxxxxxxxxxxxxxxx\n")
