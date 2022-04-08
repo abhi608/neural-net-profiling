@@ -5,6 +5,7 @@ File(s) description:<br/>
 a100: Runtime log and parsed file for the data collected on A100 GPU<br/>
 v100: Runtime log and parsed file for the data collected on V100 GPU<br/>
 imagenet: neural network training code files<br/>
+theory: code and lg files for theoretical calculations<br/>
 scripts: SBATCH and bash scripts to run the profiler and parse the data<br/>
 report.pdf: Final report<br/>
 <br/>
